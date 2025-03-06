@@ -1,0 +1,10 @@
+services:
+  app:
+    platform: linux/x86_64
+    build: .
+    ports:
+      - "8008:8008"
+    environment:
+      - DATABASE_URL=postgresql://postgres.xyjrcuojcoypcpbclrvo:Y5khIwD2NgemdVp4@aws-0-us-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+      - NODE_ENV=production
+    command: sh -c "node dist/main"

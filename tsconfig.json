@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "NodeJS App",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["esnext"],
+    "module": "NodeNext",
+    "moduleDetection": "force",
+    "moduleResolution": "NodeNext",
+    "incremental": true,
+    "strict": true,
+    "allowJs": true,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    // "skipLibCheck": true,
+    "noEmit": true,
+    "composite": false,
+    "forceConsistentCasingInFileNames": true,
+    "preserveWatchOutput": true,
+    "removeComments": true
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["src"]
+}

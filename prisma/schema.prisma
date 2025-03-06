@@ -1,0 +1,126 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "views", "prismaSchemaFolder", "nativeDistinct"]
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Airport {
+  id               String            @id @default(dbgenerated("('apt_'::text || generate_uuid(10))"))
+  iataCode         String            @unique @db.VarChar(10)
+  isoRegionCode    String            @db.VarChar(10)
+  isoCountryCode   String            @db.VarChar(10)
+  createdAt        DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime?         @updatedAt @db.Timestamptz(6)
+  deletedAt        DateTime?         @db.Timestamptz(6)
+  country          Country           @relation(fields: [isoCountryCode], references: [isoCode])
+  region           Region            @relation(fields: [isoRegionCode], references: [isoCode])
+  destinationTrips Trip[]            @relation("destinationTrips")
+  originTrips      Trip[]            @relation("originTrips")
+  metaDestinations MetaDestination[] @relation("AirportToMetaDestination")
+
+  @@index([iataCode])
+  @@index([isoRegionCode])
+  @@index([isoCountryCode])
+}
+
+model Region {
+  id             String    @id @default(dbgenerated("('rgn_'::text || generate_uuid(10))"))
+  isoCode        String    @unique @db.VarChar(10)
+  name           String    @db.VarChar(100)
+  exploreName    String?   @db.VarChar(100)
+  isoCountryCode String    @db.VarChar(10)
+  createdAt      DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime? @updatedAt @db.Timestamptz(6)
+  deletedAt      DateTime? @db.Timestamptz(6)
+  airports       Airport[]
+  country        Country   @relation(fields: [isoCountryCode], references: [isoCode])
+
+  @@index([isoCode])
+}
+
+model Country {
+  id          String    @id @default(dbgenerated("('co_'::text || generate_uuid(10))"))
+  isoCode     String    @unique @db.VarChar(10)
+  name        String    @unique @db.VarChar(100)
+  exploreName String?   @db.VarChar(100)
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime? @updatedAt @db.Timestamptz(6)
+  deletedAt   DateTime? @db.Timestamptz(6)
+  airports    Airport[]
+  regions     Region[]
+
+  @@index([isoCode])
+}
+
+enum MetaDestinationName {
+  north_america
+  europe
+  asia
+  south_america
+  africa
+  australia
+  beaches
+  vineyards
+  mountains
+  snow
+  other
+}
+
+model MetaDestination {
+  id           String              @id @default(dbgenerated("('dst_'::text || generate_uuid(10))"))
+  identifier   MetaDestinationName @unique
+  displayOrder Int                 @unique
+  createdAt    DateTime            @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime?           @updatedAt @db.Timestamptz(6)
+  deletedAt    DateTime?           @db.Timestamptz(6)
+  airports     Airport[]           @relation("AirportToMetaDestination")
+
+  @@index([displayOrder])
+  @@index([identifier])
+}
+
+model Trip {
+  id                 String         @id @default(dbgenerated("('trp_'::text || generate_uuid(10))"))
+  originCode         String         @db.VarChar(10)
+  destinationCode    String         @db.VarChar(10)
+  createdAt          DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime?      @updatedAt @db.Timestamptz(6)
+  deletedAt          DateTime?      @db.Timestamptz(6)
+  searchResults      SearchResult[]
+  destinationAirport Airport        @relation("destinationTrips", fields: [destinationCode], references: [iataCode])
+  originAirport      Airport        @relation("originTrips", fields: [originCode], references: [iataCode])
+
+  @@index([originCode])
+  @@index([destinationCode])
+}
+
+model Search {
+  id        String         @default(dbgenerated("('avs_'::text || generate_uuid(10))"))
+  createdAt DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime?      @updatedAt @db.Timestamptz(6)
+  deletedAt DateTime?      @db.Timestamptz(6)
+  results   SearchResult[]
+
+  @@id([id, createdAt])
+}
+
+model SearchResult {
+  id        String    @default(dbgenerated("('asr_'::text || generate_uuid(10))"))
+  searchId  String
+  tripId    String
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(6)
+  deletedAt DateTime? @db.Timestamptz(6)
+  search    Search    @relation(fields: [searchId, createdAt], references: [id, createdAt], onDelete: Cascade, onUpdate: Cascade)
+  trip      Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([id, createdAt])
+  @@index([tripId])
+  @@index([searchId])
+}

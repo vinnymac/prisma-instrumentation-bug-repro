@@ -1,0 +1,52 @@
+{
+  "name": "prisma-repro-broken-query",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "version": "1.0.0",
+  "description": "Reproduction of Prisma CASE statement parsing bug",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "nest build",
+    "generate": "prisma generate",
+    "start": "node dist/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "supabase": "supabase"
+  },
+  "prisma": {
+    "seed": "ts-node src/seed.ts"
+  },
+  "$schema": "https://json.schemastore.org/package",
+  "homepage": "",
+  "dependencies": {
+    "@nestjs/common": "^11.0.3",
+    "@nestjs/config": "^4.0.0",
+    "@nestjs/core": "^11.0.3",
+    "@nestjs/platform-express": "^11.0.3",
+    "@opentelemetry/api": "1.8.0",
+    "@prisma/client": "^6.4.1",
+    "@prisma/instrumentation": "^6.4.1",
+    "express": "^4.18.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.2",
+    "@types/node": "^22.12.0",
+    "@types/webpack-node-externals": "^3",
+    "prettier": "^3.3.1",
+    "prisma": "^6.4.1",
+    "run-script-webpack-plugin": "^0.2.0",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3",
+    "webpack": "^5.91.0",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "volta": {
+    "node": "22.13.1",
+    "yarn": "4.6.0"
+  },
+  "packageManager": "yarn@4.6.0"
+}
