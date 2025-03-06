@@ -12,7 +12,7 @@ After upgrading from Prisma 6.0.1 to 6.1.0 or higher, certain valid SQL queries 
 ## Reproduction Steps
 1. docker compose up app (wait for it to finish)
 2. Run a sanity check to confirm the service is capable of querying the db successfully: `curl --request GET --url 'http://localhost:8008/repro/test/sanity'`
-3. Run the reproduction which will never finish with: `curl --request GET --url 'http://localhost:8008/repro/test/fixed?searchId=avs_yhbgYLBYPj'`
+3. Run the reproduction which will never finish with: `curl --request GET --url 'http://localhost:8008/repro/test/bug?searchId=avs_yhbgYLBYPj'`
 
 ## Expected Behavior
 The query should execute successfully. It is valid SQL and runs correctly when executed directly in PostgreSQL, when not using PrismaInstrumentation, or when using a direct connection.

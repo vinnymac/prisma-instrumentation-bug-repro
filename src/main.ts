@@ -78,10 +78,11 @@ export class ReproController {
     return await this.db.metaDestination.findMany();
   }
 
-  @Get(`test/fixed`)
+  @Get(`test/bug`)
   async testFixed(@Query("searchId") searchId: string) {
     this.logger.log(`Running test query with searchId: ${searchId}`);
 
+    // Note: It doesn't matter which query method is used here, the bug will still occur
     return this.db.$queryRawUnsafe(`
     WITH base_data AS (
       SELECT
